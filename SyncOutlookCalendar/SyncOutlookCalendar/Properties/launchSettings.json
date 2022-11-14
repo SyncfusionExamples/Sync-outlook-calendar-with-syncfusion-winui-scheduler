@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SyncOutlookCalendar (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SyncOutlookCalendar (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
