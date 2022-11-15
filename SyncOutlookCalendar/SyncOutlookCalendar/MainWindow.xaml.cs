@@ -75,6 +75,24 @@ namespace SyncOutlookCalendar
 
                 Client.Me.Events.Request().AddAsync(calEvent);
             }
+            GetOutlookCalendarEvents();
+        }
+
+        private void GetOutlookCalendarEvents()
+        {
+            var events = Client.Me.Events.Request().GetAsync().Result.ToList();
+            if (events != null)
+            {
+
+            }
+        }
+
+        public class Meeting
+        {
+            public string EventName { get; set; }
+            public DateTime From { get; set; }
+            public DateTime To { get; set; }
+            public bool AllDay { get; set; }
         }
     }
 
