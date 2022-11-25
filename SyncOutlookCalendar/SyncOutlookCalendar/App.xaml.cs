@@ -12,12 +12,8 @@ namespace SyncOutlookCalendar
     /// </summary>
     public partial class App : Application
     {
-        public static IPublicClientApplication ClientApplication;
-        //You need to replace your Application ID
-        public static string ClientID = "09893c5e-c8e6-4652-9e11-43baa5422854";
-        public static string[] Scopes = { "User.Read", "Calendars.Read", "Calendars.ReadWrite" };
-        private const string Tenant = "77f1fe12-b049-4919-8c50-9fb41e5bb63b"; 
-        private const string Authority = "https://login.microsoftonline.com/" + Tenant;
+        internal static IPublicClientApplication ClientApplication;
+        private string clientID, tenantID, authority;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -27,10 +23,18 @@ namespace SyncOutlookCalendar
         {
             this.InitializeComponent();
 
-            ClientApplication = PublicClientApplicationBuilder.Create(ClientID)
-        .WithAuthority(Authority)
-        .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
-        .Build();
+            //// You need to replace your Application or Client ID
+            clientID = "e2e6ade8-94cc-47f8-a63d-75fa054fcd9c";
+
+            //// You need to replace your tenant ID
+            tenantID = "77f1fe12-b049-4919-8c50-9fb41e5bb63b";
+
+            authority = "https://login.microsoftonline.com/" + tenantID;
+
+            ClientApplication = PublicClientApplicationBuilder.Create(clientID)
+            .WithAuthority(authority)
+            .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
+            .Build();
 
         }
 

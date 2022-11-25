@@ -3,6 +3,7 @@ using Microsoft.Identity.Client;
 using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -19,26 +20,27 @@ namespace SyncOutlookCalendar
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private GraphServiceClient Client = null;
+        private GraphServiceClient Client;
+        private static string[] scopes = { "User.Read", "Calendars.Read", "Calendars.ReadWrite" };
+
         public MainWindow()
         {
             this.InitializeComponent();
-            this.Authenticate();
         }
 
-        private async void Authenticate()
+        private async void Authenticate(bool import)
         {
             AuthenticationResult tokenRequest;
             var accounts = await App.ClientApplication.GetAccountsAsync();
             if (accounts.Count() > 0)
             {
-                tokenRequest = await App.ClientApplication.AcquireTokenSilent(App.Scopes, accounts.FirstOrDefault())
+                tokenRequest = await App.ClientApplication.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
                     .ExecuteAsync();
             }
             else
             {
 
-                tokenRequest = await App.ClientApplication.AcquireTokenInteractive(App.Scopes).ExecuteAsync();
+                tokenRequest = await App.ClientApplication.AcquireTokenInteractive(scopes).ExecuteAsync();
             }
 
             Client = new GraphServiceClient("https://graph.microsoft.com/v1.0/",
@@ -46,36 +48,40 @@ namespace SyncOutlookCalendar
                                 {
                                     requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", tokenRequest.AccessToken);
                                 }));
-
-            this.AddCalendar();
+            if(import)
+            {
+                this.GetOutlookCalendarEvents();
+            }
+            else
+            {
+                this.AddEventToOutlookCalendar();
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void AddCalendar()
+        private void AddEventToOutlookCalendar()
         {
-            if (Client != null)
+            foreach(Meeting meeting in this.Scheduler.ItemsSource)
             {
                 var calEvent = new Event
                 {
-                    Subject = "Azure",
+                    Subject = meeting.EventName,
 
                     Start = new DateTimeTimeZone
                     {
-                        DateTime = DateTime.Now.ToString(),
+                        DateTime = meeting.From.ToString(),
                         TimeZone = "GMT Standard Time"
                     },
                     End = new DateTimeTimeZone()
                     {
-                        DateTime = DateTime.Now.AddHours(1).ToString(),
+                        DateTime = meeting.To.ToString(),
                         TimeZone = "GMT Standard Time"
                     },
                 };
-
                 Client.Me.Events.Request().AddAsync(calEvent);
             }
-            GetOutlookCalendarEvents();
         }
 
         private void GetOutlookCalendarEvents()
@@ -83,16 +89,27 @@ namespace SyncOutlookCalendar
             var events = Client.Me.Events.Request().GetAsync().Result.ToList();
             if (events != null)
             {
-
+                foreach (Event appointment in events)
+                {
+                    Meeting meeting = new Meeting()
+                    {
+                        EventName = appointment.Subject,
+                        From = Convert.ToDateTime(appointment.Start.DateTime),
+                        To = Convert.ToDateTime(appointment.End.DateTime),
+                    };
+                    (this.Scheduler.ItemsSource as ObservableCollection<Meeting>).Add(meeting);
+                }
             }
         }
 
-        public class Meeting
+        private void ImportButtonClick(object sender, RoutedEventArgs e)
         {
-            public string EventName { get; set; }
-            public DateTime From { get; set; }
-            public DateTime To { get; set; }
-            public bool AllDay { get; set; }
+            this.Authenticate(true);
+        }
+
+        private void ExportButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Authenticate(false);
         }
     }
 
