@@ -16,8 +16,8 @@
             <RowDefinition Height="0.9*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Import Outlook Calendar Events to Syncfusion Scheduler" Background="#DEECF9" Command="{Binding ImportButtonCommand}" Margin="5"/>
-            <Button Content="Export Syncfusion Scheduler Events to Outlook Calendar" Background="#DEECF9" Command="{Binding ExportButtonCommand}" Margin="5" />
+            <Button Content="Import Outlook Calendar Events to Syncfusion WinUI Scheduler" Background="#DEECF9" Command="{Binding ImportButtonCommand}" Margin="5"/>
+            <Button Content="Export Syncfusion WinUI Scheduler Events to Outlook Calendar" Background="#DEECF9" Command="{Binding ExportButtonCommand}" Margin="5" />
         </StackPanel>
 
         <scheduler:SfScheduler x:Name="Scheduler" Grid.Row="1" ItemsSource="{Binding Meetings}">
@@ -26,8 +26,10 @@
                 <scheduler:AppointmentMapping
             Subject="EventName"
             StartTime="From"
-            AppointmentBackground="Background"
             EndTime="To"
+            AppointmentBackground="Background"
+            Foreground="Foreground"
+            RecurrenceRule="RRule"
             IsAllDay="IsAllDay"/>
             </scheduler:SfScheduler.AppointmentMapping>
         </scheduler:SfScheduler>

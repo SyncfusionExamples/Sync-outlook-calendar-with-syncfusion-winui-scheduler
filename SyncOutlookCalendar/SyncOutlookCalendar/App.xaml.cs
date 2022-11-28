@@ -24,7 +24,7 @@ namespace SyncOutlookCalendar
             this.InitializeComponent();
 
             //// You need to replace your Application or Client ID
-            clientID = "e2e6ade8-94cc-47f8-a63d-75fa054fcd9c";
+            clientID = "09893c5e-c8e6-4652-9e11-43baa5422854";
 
             //// You need to replace your tenant ID
             tenantID = "77f1fe12-b049-4919-8c50-9fb41e5bb63b";

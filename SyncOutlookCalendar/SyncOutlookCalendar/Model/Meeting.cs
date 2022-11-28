@@ -1,9 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Media;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyncOutlookCalendar
 {
@@ -14,5 +10,7 @@ namespace SyncOutlookCalendar
         public DateTime To { get; set; }
         public bool IsAllDay { get; set; }
         public Brush Background { get; set; }
+        public Brush Foreground { get; set; }
+        public string RRule { get; set; }
     }
 }
