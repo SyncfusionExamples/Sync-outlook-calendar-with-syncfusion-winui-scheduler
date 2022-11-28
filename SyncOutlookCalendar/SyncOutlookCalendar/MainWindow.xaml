@@ -4,33 +4,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SyncOutlookCalendar"
     xmlns:scheduler="using:Syncfusion.UI.Xaml.Scheduler"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid>
+        <Grid.DataContext>
+            <local:SchedulerViewModel/>
+        </Grid.DataContext>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.1*"/>
             <RowDefinition Height="0.9*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Import Outlook Calendar Events with Syncfusion Scheduler" Margin="5" Click="ImportButtonClick"/>
-            <Button Content="Export Syncfusion Scheduler Events to Outlook Calendar" Margin="5" Click="ExportButtonClick"/>
+            <Button Content="Import Outlook Calendar Events to Syncfusion Scheduler" Background="#DEECF9" Command="{Binding ImportButtonCommand}" Margin="5"/>
+            <Button Content="Export Syncfusion Scheduler Events to Outlook Calendar" Background="#DEECF9" Command="{Binding ExportButtonCommand}" Margin="5" />
         </StackPanel>
-        
+
         <scheduler:SfScheduler x:Name="Scheduler" Grid.Row="1" ItemsSource="{Binding Meetings}">
-            <scheduler:SfScheduler.DataContext>
-                <local:SchedulerViewModel/>
-            </scheduler:SfScheduler.DataContext>
+
             <scheduler:SfScheduler.AppointmentMapping>
                 <scheduler:AppointmentMapping
             Subject="EventName"
             StartTime="From"
+            AppointmentBackground="Background"
             EndTime="To"
             IsAllDay="IsAllDay"/>
             </scheduler:SfScheduler.AppointmentMapping>
         </scheduler:SfScheduler>
-
-        
-
     </Grid>
 </Window>
